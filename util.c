@@ -46,7 +46,7 @@ int get_others_mac(const char *iface, const char *target_ip_str, unsigned char m
     }
 
     // pcap 핸들 열기
-    handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
+    handle = pcap_open_live(device, BUFSIZ, 1, 1, errbuf);
     if (handle == NULL)
     {
         fprintf(stderr, "pcap_open_live() 실패: %s\n", errbuf);
@@ -71,7 +71,7 @@ int get_others_mac(const char *iface, const char *target_ip_str, unsigned char m
     arp->oper = htons(1); // 요청(1)
     memcpy(arp->sha, my_mac, 6);
     memcpy(arp->spa, my_ip, 4);
-    memset(arp->tha, 0x00, 6);
+    memset(arp->tha, 0x00, 6); // 맥 모르니까 00
     memcpy(arp->tpa, target_ip, 4);
 
     // 패킷 전송
@@ -150,7 +150,7 @@ int send_arp(const char *iface, const char *sender_ip_str, const char *target_ip
     }
 
     // pcap 핸들 열기
-    handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
+    handle = pcap_open_live(device, BUFSIZ, 0, 0, errbuf);
     if (handle == NULL)
     {
         fprintf(stderr, "pcap_open_live() 실패: %s\n", errbuf);
